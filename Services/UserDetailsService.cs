@@ -31,7 +31,19 @@ namespace SampleDemoApp.Services
         public async Task<int> Create(UserDetails data)
         {
             var dbparams = new DynamicParameters();
-            dbparams.Add("Id", data.Id, DbType.Int32);
+            dbparams.Add("LocationId", data.LocationId, DbType.Int32);
+            dbparams.Add("EmployeeType", data.EmployeeType, DbType.String);
+            dbparams.Add("Name", data.Name, DbType.String);
+            dbparams.Add("MobileNo", data.MobileNo, DbType.Int32);
+            dbparams.Add("Email", data.Email, DbType.String);
+            dbparams.Add("Nationality", data.Nationality, DbType.String);
+            dbparams.Add("Designation", data.Designation, DbType.String);
+            dbparams.Add("PassportNo", data.PassportNo, DbType.String);
+            dbparams.Add("PassportExpirtDate", data.PassportExpirtDate, DbType.DateTime);
+            dbparams.Add("PassportFilePath", data.PassportFilePath, DbType.String);
+            dbparams.Add("PersonPhoto", data.PersonPhoto, DbType.String);
+
+
             var result = await Task.FromResult(_dapper.Insert<int>("[dbo].[SP_Add_UserDetails]"
                 , dbparams,
                 commandType: CommandType.StoredProcedure));
@@ -52,8 +64,10 @@ namespace SampleDemoApp.Services
 
         public async Task<int> Delete(int Id)
         {
-            var result = await Task.FromResult(_dapper.Execute($"Delete [UserDetails] Where Id = {Id}", null, commandType: CommandType.Text));
-            return result;
+            var dbPara = new DynamicParameters();
+            dbPara.Add("Id", Id);
+            var result = await Task.FromResult(_dapper.Execute($"Delete [UserDetails] Where Id = @Id", dbPara, commandType: CommandType.Text));
+            return 1;
         }
     }
 }

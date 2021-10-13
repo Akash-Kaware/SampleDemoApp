@@ -34,23 +34,25 @@ namespace SampleDemoApp.Controllers
         }
 
         [HttpPost(nameof(Create))]
-        public async Task<int> Create(UserDetails data)
+        public async Task<IActionResult> Create(UserDetails data)
         {
-           
-            return await _UserDetailsService.Create(data);
-        }
-
-        [HttpPatch(nameof(Update))]
-        public async Task<int> Update(UserDetails data)
-        {
-            return await _UserDetailsService.Update(data);
+            if (data.Id == 0)
+            {
+                var result = await _UserDetailsService.Create(data);
+                return Ok(new { data = result });
+            }
+            else
+            {
+                var result = await _UserDetailsService.Update(data);
+                return Ok(new { data = result });
+            }
         }
 
         [HttpDelete(nameof(Delete))]
-        public async Task<int> Delete(int Id)
+        public async Task<IActionResult> Delete(int Id)
         {
             var result = await _UserDetailsService.Delete(Id);
-            return result;
+            return Ok(new { data = result });
         }
     }
 }
