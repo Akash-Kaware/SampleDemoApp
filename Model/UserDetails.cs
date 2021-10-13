@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,5 +20,8 @@ namespace SampleDemoApp.Model
         public DateTime PassportExpirtDate { get; set; }
         public string PassportFilePath { get; set; }
         public string PersonPhoto { get; set; }
+
+        public IFormFile Passport { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

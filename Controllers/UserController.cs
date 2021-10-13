@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SampleDemoApp.Model;
 using SampleDemoApp.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,8 +36,17 @@ namespace SampleDemoApp.Controllers
         }
 
         [HttpPost(nameof(Create))]
-        public async Task<IActionResult> Create(UserDetails data)
+        public async Task<IActionResult> Create([FromForm] UserDetails data)
         {
+            if (data.Passport != null)
+            {
+                data.PassportFilePath = await UploadFile(data.Passport);
+            }
+            if (data.Photo != null)
+            {
+                data.PersonPhoto = await UploadFile(data.Photo);
+            }
+
             if (data.Id == 0)
             {
                 var result = await _UserDetailsService.Create(data);
@@ -53,6 +64,17 @@ namespace SampleDemoApp.Controllers
         {
             var result = await _UserDetailsService.Delete(Id);
             return Ok(new { data = result });
+        }
+
+        private async Task<string> UploadFile(IFormFile file)
+        {
+            string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filename);
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return filename;
         }
     }
 }

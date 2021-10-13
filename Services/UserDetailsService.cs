@@ -52,12 +52,23 @@ namespace SampleDemoApp.Services
 
         public async Task<int> Update(UserDetails data)
         {
-            var dbPara = new DynamicParameters();
-            dbPara.Add("Id", data.Id);
-            dbPara.Add("Name", data.Name, DbType.String);
+            var dbparams = new DynamicParameters();
+            dbparams.Add("Id", data.Id);
+            dbparams.Add("LocationId", data.LocationId, DbType.Int32);
+            dbparams.Add("EmployeeType", data.EmployeeType, DbType.String);
+            dbparams.Add("Name", data.Name, DbType.String);
+            dbparams.Add("MobileNo", data.MobileNo, DbType.Int32);
+            dbparams.Add("Email", data.Email, DbType.String);
+            dbparams.Add("Nationality", data.Nationality, DbType.String);
+            dbparams.Add("Designation", data.Designation, DbType.String);
+            dbparams.Add("PassportNo", data.PassportNo, DbType.String);
+            dbparams.Add("PassportExpirtDate", data.PassportExpirtDate, DbType.DateTime);
+            dbparams.Add("PassportFilePath", data.PassportFilePath, DbType.String);
+            dbparams.Add("PersonPhoto", data.PersonPhoto, DbType.String);
+
 
             var updateArticle = await Task.FromResult(_dapper.Update<int>("[dbo].[SP_Update_UserDetails]",
-                            dbPara,
+                            dbparams,
                             commandType: CommandType.StoredProcedure));
             return updateArticle;
         }
